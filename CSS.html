@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zyrus | Student Profile (Pure CSS Group Photo)</title>
+
+    <style>
+        :root {
+            --bg-page: #f8f1eb;
+            --bg-card: #ffffff;
+            --bg-subtle: #fff0f5;
+            --bg-accent: #fff8f5;
+            --text-main: #2b1a00;
+            --text-muted: #6b5240;
+            --primary: #d6336c;
+            --primary-hover: #b02152;
+            --primary-light: #fce4ec;
+            --border-color: #f3c1d0;
+            --shadow-color: rgba(66, 40, 0, 0.12);
+            
+            --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #theme-toggle-check:checked ~ .container {
+            --bg-page: #120d13;
+            --bg-card: #1c151e;
+            --bg-subtle: #2a1b28;
+            --bg-accent: #231622;
+            --text-main: #f3e9f0;
+            --text-muted: #d8c4d3;
+            --primary: #ff5c98;
+            --primary-hover: #ff85b3;
+            --primary-light: #3a1c2a;
+            --border-color: #4a2838;
+            --shadow-color: rgba(0, 0, 0, 0.6);
+        }
+
+        #theme-toggle-check:checked ~ .container .theme-text-light { display: none; }
+        #theme-toggle-check:not(:checked) ~ .container .theme-text-dark { display: none; }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hidden-checkbox {
+            display: none;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: clamp(15px, 4vw, 40px) clamp(10px, 3vw, 20px);
+            transition: background-color 0.4s var(--transition-smooth), color 0.4s var(--transition-smooth);
+        }
+
+        .container {
+            background-color: var(--bg-card);
+            max-width: 950px;
+            margin: auto;
+            padding: clamp(20px, 5vw, 45px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 12px 40px var(--shadow-color);
+            transition: background-color 0.4s, border-color 0.4s;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .theme-toggle-btn {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 30px 15px;
+            background: var(--bg-subtle);
+            border-radius: var(--radius-md);
+            margin-bottom: 35px;
+            color: var(--text-main);
+        }
+
+        header p {
+            color: var(--text-muted);
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: clamp(28px, 5vw, 42px);
+            margin-bottom: 12px;
+        }
+
+        .profile-image {
+            width: 130px;
+            height: 130px;
+            border-radius: var(--radius-full);
+            margin: 15px auto 20px;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            border: 4px solid var(--bg-card);
+            outline: 3px solid var(--primary);
+            box-shadow: 0 8px 20px var(--shadow-color);
+            transition: transform 0.4s var(--transition-smooth);
+        }
+
+        .profile-image:hover {
+            transform: rotate(8deg) scale(1.08);
+        }
+
+        .badge-link {
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 14px;
+        }
+
+        .badge {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: all 0.3s var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-link:hover .badge {
+            transform: translateY(-3px) scale(1.08);
+            background-color: var(--primary-hover);
+            box-shadow: 0 8px 20px rgba(214, 51, 108, 0.4);
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: clamp(20px, 3.5vw, 26px);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
+            padding-left: 14px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        .about {
+            background-color: var(--bg-accent);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--primary);
+            color: var(--text-main);
+        }
+
+        .about p {
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        /* Profile Cards */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .card {
+            background-color: var(--bg-accent);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 26px 20px;
+            text-align: center;
+            box-shadow: 0 6px 16px var(--shadow-color);
+            transition: transform 0.4s var(--transition-smooth), border-color 0.4s, background-color 0.4s;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        .card p {
+            color: var(--text-muted);
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background-color: var(--bg-subtle);
+            border-color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .card-hint {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* 3D Flip Cards */
+        .learning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            perspective: 1000px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            height: 190px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.7s var(--transition-smooth);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner,
+        .flip-card:focus-within .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 6px 16px var(--shadow-color);
+        }
+
+        .flip-card-front {
+            background-color: var(--bg-accent);
+            color: var(--text-main);
+        }
+
+        .flip-card-front .tech-icon {
+            font-size: 38px;
+            margin-bottom: 8px;
+        }
+
+        .flip-card-front h3 {
+            color: var(--primary);
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .flip-card-front span {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .flip-card-back {
+            background-color: var(--primary);
+            color: white;
+            transform: rotateY(180deg);
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .flip-card-back h4 {
+            font-size: 16px;
+            margin-bottom: 6px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            width: 100%;
+            padding-bottom: 4px;
+        }
+
+        .flip-card-back p {
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.95;
+            margin-bottom: 8px;
+        }
+
+        .flip-card-back .tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 8px;
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Highlight & Surprise Button */
+        .highlight {
+            text-align: center;
+            background-color: var(--bg-subtle);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            border: 1px dashed var(--border-color);
+            color: var(--text-main);
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .surprise-btn {
+            background: linear-gradient(135deg, var(--primary), #ff6097);
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            padding: 16px 38px;
+            border: none;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(214, 51, 108, 0.35);
+            transition: all 0.4s var(--transition-smooth);
+            animation: pulseGlow 2.5s infinite ease-in-out;
+        }
+
+        .surprise-btn:hover {
+            transform: translateY(-5px) scale(1.06);
+            box-shadow: 0 14px 35px rgba(214, 51, 108, 0.5);
+            background: linear-gradient(135deg, var(--primary-hover), var(--primary));
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(214, 51, 108, 0.5); }
+            50% { box-shadow: 0 0 0 16px rgba(214, 51, 108, 0); }
+        }
+
+        /* Slide Overlay System */
+        .modal-slide-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s var(--transition-smooth);
+            z-index: 2000;
+        }
+
+        .modal-slide-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 35px;
+            border-radius: var(--radius-lg);
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(60px) scale(0.95);
+            transition: transform 0.4s var(--transition-smooth);
+            box-shadow: 0 20px 50px var(--shadow-color);
+            color: var(--text-main);
+        }
+
+        .modal-slide-card h3 {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 14px;
+        }
+
+        .modal-slide-card p {
+            margin-bottom: 24px;
+            color: var(--text-main);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .close-btn {
+            background: var(--primary);
+            color: white;
+            padding: 12px 32px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .close-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .modal-slide-overlay:target {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-slide-overlay:target .modal-slide-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .group-photo-modal-card {
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            padding: 30px clamp(15px, 4vw, 35px);
+            border-radius: var(--radius-lg);
+            max-width: 920px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+            transform: scale(0.7) translateY(40px);
+            transition: transform 0.5s var(--transition-smooth);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.6);
+            color: var(--text-main);
+        }
+
+        #classmates-slide:target .group-photo-modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        /* High Precision Animated Frame */
+        .group-photo-frame {
+            width: 100%;
+            max-height: 550px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 4px solid var(--bg-card);
+            box-shadow: 0 15px 35px var(--shadow-color);
+            margin: 20px 0;
+            position: relative;
+            background: var(--bg-accent);
+        }
+
+        .group-photo-img {
+            width: 100%;
+            height: 100%;
+            max-height: 550px;
+            object-fit: cover;
+            display: block;
+            border-radius: var(--radius-sm);
+            transition: transform 0.8s var(--transition-smooth);
+        }
+
+        /* Interactive Zoom-in Hover on Group Picture */
+        .group-photo-frame:hover .group-photo-img {
+            transform: scale(1.06);
+        }
+
+        /* Teacher Surprise Modal */
+        .teacher-modal-card {
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            padding: 35px 25px;
+            border-radius: var(--radius-lg);
+            max-width: 460px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.6) rotate(-5deg);
+            transition: transform 0.5s var(--transition-smooth);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+            color: var(--text-main);
+        }
+
+        .teacher-photo-frame {
+            width: 170px;
+            height: 170px;
+            margin: 0 auto 20px;
+            border-radius: var(--radius-md);
+            padding: 8px;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            animation: floatPhoto 3s ease-in-out infinite;
+        }
+
+        .teacher-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            transition: transform 0.5s ease;
+        }
+
+        .teacher-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 14px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        @keyframes floatPhoto {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        #teacher-surprise:target .teacher-modal-card {
+            transform: scale(1) rotate(0deg);
+        }
+
+        footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <input type="checkbox" id="theme-toggle-check" class="hidden-checkbox">
+
+    <main class="container">
+        
+        <div class="top-bar">
+            <label for="theme-toggle-check" class="theme-toggle-btn">
+                <span class="theme-text-dark">🌙 Dark Mode</span>
+                <span class="theme-text-light">☀️ Light Mode</span>
+            </label>
+        </div>
+
+        <header>
+            <h1>Welcome to My Webpage!</h1>
+            <img
+                src="meh.PNG"
+                alt="Zyrus R. Bigcas Profile Picture"
+                class="profile-image"
+            >
+            <h2 style="border: none; padding: 0;">Zyrus R. Bigcas</h2>
+            <p>A BSIT Student and Future Web Developer</p>
+
+            <!-- CLICKABLE BSIT 2B BADGE -->
+            <a href="#classmates-slide" class="badge-link">
+                <span class="badge">👥 BSIT 2B Class Photo (Click to View)</span>
+            </a>
+        </header>
+
+        <section>
+            <h2>About Me</h2>
+            <div class="about">
+                <p><strong>Course &amp; Section:</strong> BSIT 2B</p>
+                <p>Hello! I am a BSIT student learning Web Systems and Technologies. I am interested in creating websites and learning more about web development.</p>
+                <p>My favorite hobbies are playing video games and designing websites. I enjoy being creative and exploring new ideas through technology.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>My Profile Cards (Click to Open)</h2>
+            <div class="card-container">
+                
+                <a href="#hobby-slide" class="card-link">
+                    <article class="card">
+                        <div class="card-icon">🎮</div>
+                        <h3>My Hobby</h3>
+                        <p>I enjoy playing video games during my free time.</p>
+                        <span class="card-hint">Click to expand →</span>
+                    </article>
+                </a>
+
+                <a href="#skills-slide" class="card-link">
+                    <article class="card">
+                        <div class="card-icon">💻</div>
+                        <h3>My Skills</h3>
+                        <p>I am learning HTML, CSS, and web design fundamentals.</p>
+                        <span class="card-hint">Click to expand →</span>
+                    </article>
+                </a>
+
+                <a href="#goal-slide" class="card-link">
+                    <article class="card">
+                        <div class="card-icon">🚀</div>
+                        <h3>My Goal</h3>
+                        <p>I want to become a skilled web developer.</p>
+                        <span class="card-hint">Click to expand →</span>
+                    </article>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- 3D FLIP-CARD GRID -->
+        <section>
+            <h2>What I Am Learning (Hover to Reveal Info)</h2>
+            <div class="learning-grid">
+                
+                <div class="flip-card" tabindex="0">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="tech-icon">🌐</div>
+                            <h3>HTML5</h3>
+                            <span>Structure & Semantics</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>HTML5 Mastery</h4>
+                            <p>Building semantic page layouts, accessible content trees, form structures, and SEO-friendly document markup.</p>
+                            <span class="tag">Status: Active Learning</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flip-card" tabindex="0">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="tech-icon">🎨</div>
+                            <h3>CSS3</h3>
+                            <span>Styling & Animations</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>CSS3 Power</h4>
+                            <p>Mastering Flexbox, CSS Grid, 3D Transforms, custom variables, and fluid typography using 0% JS.</p>
+                            <span class="tag">Status: Advanced Practice</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flip-card" tabindex="0">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="tech-icon">📐</div>
+                            <h3>Web Design</h3>
+                            <span>UI/UX Architecture</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>UI/UX Fundamentals</h4>
+                            <p>Designing user-centric layouts, harmonizing color systems, contrast ratios, and micro-interactions.</p>
+                            <span class="tag">Status: Creative Focus</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flip-card" tabindex="0">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="tech-icon">📱</div>
+                            <h3>Responsive Layout</h3>
+                            <span>Mobile First</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4>Adaptive Design</h4>
+                            <p>Utilizing media queries, relative length units (`clamp()`, `rem`), and auto-fitting grid layouts for all devices.</p>
+                            <span class="tag">Status: Core Standard</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="highlight">
+            <h2 style="border: none; padding: 0;">My Personal Motto</h2>
+            <p>"Keep learning, stay creative, and turn ideas into reality."</p>
+        </section>
+
+        <!-- SURPRISE BUTTON -->
+        <div class="button-container">
+            <a href="#teacher-surprise" class="surprise-btn">
+                <span>🎁 Click Me for a Surprise!</span>
+            </a>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Zyrus R. Bigcas | BSIT 2B | Student Profile Webpage</p>
+            <p>Designed with 100% Pure HTML and CSS</p>
+        </footer>
+
+    </main>
+
+    <!-- Standard Slide Panels -->
+    <div id="hobby-slide" class="modal-slide-overlay">
+        <div class="modal-slide-card">
+            <div style="font-size: 50px; margin-bottom: 10px;">🎮</div>
+            <h3>Gaming & Tech Hobby</h3>
+            <p>I spend my free time playing competitive and narrative-driven video games. Gaming helps me improve my strategy, focus, and eye for digital UI/UX design!</p>
+            <a href="#" class="close-btn">Close Panel</a>
+        </div>
+    </div>
+
+    <div id="skills-slide" class="modal-slide-overlay">
+        <div class="modal-slide-card">
+            <div style="font-size: 50px; margin-bottom: 10px;">💻</div>
+            <h3>Technical Skillsets</h3>
+            <p>Currently mastering pure HTML5 semantics, modern CSS grid/flexbox layouts, responsive design, and CSS keyframe animations without relying on heavy external scripts.</p>
+            <a href="#" class="close-btn">Close Panel</a>
+        </div>
+    </div>
+
+    <div id="goal-slide" class="modal-slide-overlay">
+        <div class="modal-slide-card">
+            <div style="font-size: 50px; margin-bottom: 10px;">🚀</div>
+            <h3>Future Development Goals</h3>
+            <p>My ultimate goal as a BSIT student is to graduate, build full-stack web platforms, and create engaging user interfaces that combine high speed with beautiful UI animations.</p>
+            <a href="#" class="close-btn">Close Panel</a>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       4. HUGE SINGLE GROUP PHOTO SHOWCASE MODAL (PURE CSS)
+       ========================================================================== -->
+    <div id="classmates-slide" class="modal-slide-overlay">
+        <div class="group-photo-modal-card">
+            <h3 style="color: var(--primary); font-size: 28px; margin-bottom: 4px;">BSIT 2B Class Photo</h3>
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 10px;">Hover over the photo for an interactive zoom effect!</p>
+
+            <!-- BIG SINGLE GROUP PHOTO FRAME -->
+            <div class="group-photo-frame">
+                <!-- ======================================================================= -->
+                <!-- 📸 GROUP PHOTO LOCATION: REPLACE src WITH YOUR CLASS GROUP PHOTO URL/FILE -->
+                <!-- ======================================================================= -->
+                <img src="C:\Users\zyrys\Pictures\klas.jpg" 
+                     alt="BSIT 2B Classmates Group Photo" 
+                     class="group-photo-img">
+            </div>
+
+            <a href="#" class="close-btn">Close Group Photo 👥</a>
+        </div>
+    </div>
+
+    <!-- TEACHER SURPRISE MODAL -->
+    <div id="teacher-surprise" class="modal-slide-overlay">
+        <div class="teacher-modal-card">
+            
+            <span class="teacher-badge">⭐ Web Systems Instructor ⭐</span>
+            
+            <div class="teacher-photo-frame">
+                <!-- 📸 TEACHER IMAGE LOCATION -->
+                <img src="C:\Users\zyrys\Pictures\kim.jpg" 
+                     alt="Teacher Photo" 
+                     class="teacher-img">
+            </div>
+
+            <h3 style="color: var(--primary); margin-bottom: 6px;">Thank You, Professor!</h3>
+            <p style="font-size: 15px; margin-bottom: 20px;">
+                Special appreciation to our Web Systems & Technologies Instructor for guiding us through modern web development and inspiring us to push our creative limits!
+            </p>
+
+            <a href="#" class="close-btn">Close Surprise ✨</a>
+        </div>
+    </div>
+
+</body>
+</html>
